@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, ImageBackground, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
 
 // This is the start screen
 export default class Start extends Component {
@@ -16,12 +17,15 @@ export default class Start extends Component {
         <ImageBackground source={require('../assets/bg-img.png')} style={styles.bgImage}>
           <Text style={styles.title}>Chat App</Text>
           <View style={styles.container}>
-            <TextInput
-              style={styles.nameBox}
-              onChangeText={(name) => this.setState({ name })}
-              value={this.state.name}
-              placeholder='Your Name'
-            />
+            <View style={styles.nameContainer}>
+              <AntDesign name='user' size={20} color='gray' />
+              <TextInput
+                style={styles.nameInput}
+                onChangeText={(name) => this.setState({ name })}
+                value={this.state.name}
+                placeholder='Your Name'
+              />
+            </View>
             <Text style={styles.bgColorText}>Choose Background Color:</Text>
             <View style={styles.colorButtonContainer}>
               {/* black */}
@@ -117,16 +121,20 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     width: '88%',
   },
-  nameBox: {
+  nameContainer: {
+    alignItems: 'center',
     color: '#757083',
     borderColor: 'gray',
     borderWidth: 1,
+    flexDirection: 'row',
     fontSize: 16,
     fontWeight: '300',
-    height: 40,
     opacity: 0.5,
     paddingLeft: 10,
     width: '88%',
+  },
+  nameInput: {
+    marginLeft: 10,
   },
   title: {
     alignItems: 'center',
