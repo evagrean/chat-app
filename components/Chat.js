@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { Bubble, GiftedChat } from 'react-native-gifted-chat';
 // only for android
 import KeyboardSpacer from 'react-native-keyboard-spacer';
@@ -77,18 +77,20 @@ export default class Chat extends Component {
   /// ----- !!!
   render() {
     return (
-      <View style={[styles.container, { backgroundColor: this.props.navigation.state.params.bgColor }]}>
-        <GiftedChat
-          renderBubble={this.renderBubble}
-          messages={this.state.messages}
-          onSend={messages => this.onSend(messages)}
-          user={{
-            _id: 1,
-          }}
-        />
-        {/* Make sure that keyboard and message input field display correctly in Android OS */}
-        {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
-      </View>
+      <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
+        <View style={[styles.container, { backgroundColor: this.props.navigation.state.params.bgColor }]}>
+          <GiftedChat
+            renderBubble={this.renderBubble}
+            messages={this.state.messages}
+            onSend={messages => this.onSend(messages)}
+            user={{
+              _id: 1,
+            }}
+          />
+          {/* Make sure that keyboard and message input field display correctly in Android OS */}
+          {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
+        </View>
+      </TouchableWithoutFeedback>
     )
   }
 }
@@ -100,4 +102,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
   }
-});
+}); 

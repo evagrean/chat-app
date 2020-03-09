@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Button, ImageBackground, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 
 // This is the start screen
 export default class Start extends Component {
@@ -12,48 +12,50 @@ export default class Start extends Component {
   }
   render() {
     return (
-      <ImageBackground source={require('../assets/bg-img.png')} style={styles.bgImage}>
-        <Text style={styles.title}>Chat App</Text>
-        <View style={styles.container}>
-          <TextInput
-            style={styles.nameBox}
-            onChangeText={(name) => this.setState({ name })}
-            value={this.state.name}
-            placeholder='Your Name'
-          />
-          <Text style={styles.bgColorText}>Choose Background Color:</Text>
-          <View style={styles.colorButtonContainer}>
-            {/* black */}
-            <TouchableOpacity
-              onPress={() => this.setState({ bgColor: '#090C08' })}
-              style={[styles.colorButton, styles.color1]} />
-            {/* purple */}
-            <TouchableOpacity
-              onPress={() => this.setState({ bgColor: '#474056' })}
-              style={[styles.colorButton, styles.color2]}
+      <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
+        <ImageBackground source={require('../assets/bg-img.png')} style={styles.bgImage}>
+          <Text style={styles.title}>Chat App</Text>
+          <View style={styles.container}>
+            <TextInput
+              style={styles.nameBox}
+              onChangeText={(name) => this.setState({ name })}
+              value={this.state.name}
+              placeholder='Your Name'
             />
-            {/* greyblue */}
-            <TouchableOpacity
-              onPress={() => this.setState({ bgColor: '#8A95A5' })}
-              style={[styles.colorButton, styles.color3]}
-            />
-            {/* green */}
-            <TouchableOpacity
-              onPress={() => this.setState({ bgColor: '#B9C6AE' })}
-              style={[styles.colorButton, styles.color4]}
-            />
-          </View>
-          <View style={styles.buttonContainer}>
-            <Button
-              style={styles.button}
-              title='Start Chatting'
-              color='#757083'
-              onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name, bgColor: this.state.bgColor })}
-            />
+            <Text style={styles.bgColorText}>Choose Background Color:</Text>
+            <View style={styles.colorButtonContainer}>
+              {/* black */}
+              <TouchableOpacity
+                onPress={() => this.setState({ bgColor: '#090C08' })}
+                style={[styles.colorButton, styles.color1]} />
+              {/* purple */}
+              <TouchableOpacity
+                onPress={() => this.setState({ bgColor: '#474056' })}
+                style={[styles.colorButton, styles.color2]}
+              />
+              {/* greyblue */}
+              <TouchableOpacity
+                onPress={() => this.setState({ bgColor: '#8A95A5' })}
+                style={[styles.colorButton, styles.color3]}
+              />
+              {/* green */}
+              <TouchableOpacity
+                onPress={() => this.setState({ bgColor: '#B9C6AE' })}
+                style={[styles.colorButton, styles.color4]}
+              />
+            </View>
+            <View style={styles.buttonContainer}>
+              <Button
+                style={styles.button}
+                title='Start Chatting'
+                color='#757083'
+                onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name, bgColor: this.state.bgColor })}
+              />
 
+            </View>
           </View>
-        </View>
-      </ImageBackground >
+        </ImageBackground >
+      </TouchableWithoutFeedback>
     );
   }
 }
