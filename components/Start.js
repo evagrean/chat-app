@@ -48,15 +48,13 @@ export default class Start extends Component {
                 style={[styles.colorButton, styles.color4]}
               />
             </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                style={styles.button}
-                title='Start Chatting'
-                color='#757083'
-                onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name, bgColor: this.state.bgColor })}
-              />
-
-            </View>
+            <TouchableOpacity
+              style={styles.buttonContainer}
+              onPress={() => this.props.navigation.navigate('Chat', { name: this.state.name, bgColor: this.state.bgColor })}>
+              <View style={styles.button}>
+                <Text style={styles.buttonText}>Start Chatting</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </ImageBackground >
       </TouchableWithoutFeedback>
@@ -80,13 +78,18 @@ const styles = StyleSheet.create({
     width: '88%',
   },
   button: {
-    color: '#FFFFFF',
     backgroundColor: '#757083',
-    fontSize: 16,
-    fontWeight: '600',
+    padding: 10
   },
   buttonContainer: {
+    height: 45,
     width: '88%',
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
   },
   colorButton: {
     borderRadius: 50 / 2,
@@ -129,6 +132,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     fontSize: 16,
     fontWeight: '300',
+    height: 45,
     opacity: 0.5,
     paddingLeft: 10,
     width: '88%',
