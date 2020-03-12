@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { Bubble, GiftedChat } from 'react-native-gifted-chat';
+import { decode, encode } from 'base-64'
 // only for android
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
@@ -8,13 +9,21 @@ import KeyboardSpacer from 'react-native-keyboard-spacer';
 const firebase = require('firebase');
 require('firebase/firestore');
 
+if (!global.btoa) {
+  global.btoa = encode;
+}
+
+if (!global.atob) {
+  global.atob = decode;
+}
+
 
 export default class Chat extends Component {
 
   constructor(props) {
     super(props);
     // Creation of the state object in order to send, receive and display messages
-    state = {
+    this.state = {
       messages: [],
       uid: 0,
     };
@@ -66,7 +75,7 @@ export default class Chat extends Component {
       text: message.text,
       createdAt: message.createdAt,
       user: message.user,
-      uid: message.uid,
+      uid: this.state.uid,
     });
   }
 
@@ -86,7 +95,12 @@ export default class Chat extends Component {
         {...props}
         wrapperStyle={{
           right: {
-            backgroundColor: '#000'
+            backgroundColor: '#454a52',
+          }
+        }}
+        textStyle={{
+          right: {
+            color: '#fff',
           }
         }}
       />
@@ -113,7 +127,9 @@ export default class Chat extends Component {
             messages={this.state.messages}
             onSend={messages => this.onSend(messages)}
             user={{
-              _id: this.state.uid
+              _id: this.state.uid,
+              avatar: "https://placeimg.com/140/140/any",
+              name: this.props.navigation.state.params.name,
             }}
           />
           {/* Make sure that keyboard and message input field display correctly in Android OS */}
