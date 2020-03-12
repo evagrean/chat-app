@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, ImageBackground, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { ImageBackground, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 
 // This is the start screen

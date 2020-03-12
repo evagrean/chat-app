@@ -4,6 +4,9 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Start from './components/Start';
 import Chat from './components/Chat';
 
+
+
+
 // Create navigator
 const navigator = createStackNavigator({
   // Tell which screens I want to add navigation to

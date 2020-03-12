@@ -4,49 +4,79 @@ import { Bubble, GiftedChat } from 'react-native-gifted-chat';
 // only for android
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 
-
+// require Firebase and Cloud Firestore
+const firebase = require('firebase');
+require('firebase/firestore');
 
 
 export default class Chat extends Component {
 
-  // Creation of the state object in order to send, reseive and display messages
-  state = {
-    messages: [],
+  constructor() {
+    super();
+    // Creation of the state object in order to send, receive and display messages
+    state = {
+      messages: [],
+      uid: 0,
+    };
+
+    // Initialize Firebase and connect to Firestore database
+    if (!firebase.apps.length) {
+      firebase.initializeApp({
+        apiKey: "AIzaSyDmXKwGCCOpKFmOQFirJuya5Vli4Z-RK0w",
+        authDomain: "chat-app-66e5f.firebaseapp.com",
+        databaseURL: "https://chat-app-66e5f.firebaseio.com",
+        projectId: "chat-app-66e5f",
+        storageBucket: "chat-app-66e5f.appspot.com",
+        messagingSenderId: "1033550813300",
+        appId: "1:1033550813300:web:5080f50f0684c29e1cd921"
+      });
+    }
+
+    this.referenceChatAppUser = null;
+
+    // Create reference to Firestore 'messages' collection which stores and retreives messages the users send
+    this.referenceMessages = firebase.firestore().collection('messages');
   }
 
-  // Called as soon as Chat component mounts
-  // Set the state with a static message to be able to see each UI element displeyed on screen
-  componentDidMount() {
+  // This function is fired when 'messages' collection changes. 
+  // Needs to retreive current data in 'messages' collection and store it in state 'messages', allowing that data to be rendered in view
+  onCollectionUpdate = (querySnapshot) => {
+    const messages = [];
+    // go through each document
+    querySnapshot.forEach((doc) => {
+      // get the QueryDocumentSnapshot's data
+      let data = doc.data();
+      messages.push({
+        _id: data._id,
+        text: data.text,
+        createdAt: data.createdAt.toDate(),
+        user: data.user,
+      });
+    });
     this.setState({
-      // Messages must follow a certain format to work with Gifted Chat library: ID, creation date, user object (user ID, name, avatar)
-      messages: [
-        {
-          _id: 1,
-          text: 'Hello developer',
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
-          },
-        },
-        // System message: commonly used to display last time user was active or joins chat for first time
-        {
-          _id: 2,
-          text: `${this.props.navigation.state.params.name} has entered the chat`,
-          createdAt: new Date(),
-          system: true,
-        },
+      messages,
+    });
+  };
 
-      ]
-    })
+  // Add new messages to the database
+  addMessage() {
+    const message = this.state.messages[0];
+    this.referenceMessages.add({
+      _id: message._id,
+      text: message.text,
+      createdAt: message.createdAt,
+      user: message.user,
+      uid: message.uid,
+    });
   }
 
   // Custom function called when user sends a message
   onSend(messages = []) {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
-    }))
+    }), () => {
+      this.addMessage();
+    });
   }
 
   // Change background color of sender's speech bubble
@@ -63,13 +93,20 @@ export default class Chat extends Component {
     )
   }
 
-
   // display user name in navigation bar 
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.state.params.name,
     };
   };
+
+  get user() {
+    return {
+      name: this.props.navigation.state.params.name,
+      _id: this.state.uid,
+      id: this.state.uid,
+    }
+  }
 
   // Code for rendering chat interface with GiftedChat component
   // ----- !!!
@@ -84,7 +121,7 @@ export default class Chat extends Component {
             messages={this.state.messages}
             onSend={messages => this.onSend(messages)}
             user={{
-              _id: 1,
+              _id: this.state.uid
             }}
           />
           {/* Make sure that keyboard and message input field display correctly in Android OS */}
@@ -92,6 +129,51 @@ export default class Chat extends Component {
         </View>
       </TouchableWithoutFeedback>
     )
+  }
+
+  // Called as soon as Chat component mounts
+  componentDidMount() {
+    // Listen to authentication events
+    // Calling Firebase Auth service with firebase.auth()
+    // onAuthStateChanged() function called when user's sign-in state changes, returns unsubscribe() function, provides you with user object
+    this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+      if (!user) {
+        await firebase.auth().signInAnonymously();
+      }
+
+      // update user state with currently active user data
+      this.setState({
+        uid: user.uid,
+        messages: [],
+      });
+
+      // Create a reference to acitve user's documents (messages). User can see all messages
+      this.referenceChatAppUser = firebase.firestore().collection('messages');
+
+      // Listen for collection changes for current user
+      this.unsubscribeChatAppUser = this.referenceChatAppUser.onSnapshot(this.onCollectionUpdate);
+    });
+
+    // Set the state with a static system message to tell user has entered the chat
+    this.setState({
+      // Messages must follow a certain format to work with Gifted Chat library: ID, creation date, user object (user ID, name, avatar)
+      messages: [
+        {
+          _id: 2,
+          text: `${this.props.navigation.state.params.name} has entered the chat`,
+          createdAt: new Date(),
+          system: true,
+        },
+      ]
+    })
+  }
+
+  componentWillUnmount() {
+    // Stop listening to authentication
+    this.authUnsubscribe();
+
+    // Stop listening for changes
+    this.unsubscribeChatAppUser();
   }
 }
 
