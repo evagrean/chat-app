@@ -11,8 +11,8 @@ require('firebase/firestore');
 
 export default class Chat extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     // Creation of the state object in order to send, receive and display messages
     state = {
       messages: [],
@@ -99,14 +99,6 @@ export default class Chat extends Component {
       title: navigation.state.params.name,
     };
   };
-
-  get user() {
-    return {
-      name: this.props.navigation.state.params.name,
-      _id: this.state.uid,
-      id: this.state.uid,
-    }
-  }
 
   // Code for rendering chat interface with GiftedChat component
   // ----- !!!
