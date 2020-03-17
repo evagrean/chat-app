@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { AsyncStorage, Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
-import NetInfo from "@react-native-community/netinfo";
+import NetInfo from '@react-native-community/netinfo';
 import { decode, encode } from 'base-64'
 // only for android
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+
 
 // require Firebase and Cloud Firestore
 const firebase = require('firebase');
@@ -76,6 +77,7 @@ export default class Chat extends Component {
     });
   };
 
+
   // Add new messages to the database
   addMessage() {
     const message = this.state.messages[0];
@@ -132,14 +134,17 @@ export default class Chat extends Component {
     }
   }
 
+  // hide Input field when offline because messages can't be sent
   renderInputToolbar(props) {
-    if (this.state.isConnected) {
+    console.log('Message from renderInputToolbar: ' + this.state.isConnected);
+    if (this.state.isConnected == false) {
+    } else {
       return (
         <InputToolbar
           {...props} />
       );
     }
-  }
+  };
 
   // Change background color of sender's speech bubble
   renderBubble(props) {
@@ -162,63 +167,63 @@ export default class Chat extends Component {
 
   // Called as soon as Chat component mounts
   componentDidMount() {
-    // Subscribe to network state updates
-    // Subscribe
-    const unsubscribe = NetInfo.addEventListener(state => {
+    // Check connection status once
+    NetInfo.fetch().then(state => {
       console.log("Connection type", state.type);
       console.log("Is connected?", state.isConnected);
     });
 
-    // Unsubscribe
-    unsubscribe();
+    // Subscribe to updates about the network state (allows to perform actions) anytime network state changes)
+    NetInfo.addEventListener(state => {
+      const isConnected = state.isConnected;
+      if (isConnected == true) {
+        this.setState({
+          isConnected: true,
+        });
+      } else {
+        this.setState({
+          isConnected: false,
+        });
+      }
+    });
 
-    // Get the network state once
-    NetInfo.isConnected.fetch().then(isConnected => {
-      if (isConnected) {
-        //Calling Firebase Auth service with firebase.auth()
+    NetInfo.fetch().then(state => {
+      const isConnected = state.isConnected;
+      if (isConnected == true) {
+        this.setState({
+          isConnected: true,
+        });
+        // Listen to authentication events
         // onAuthStateChanged() function called when user's sign-in state changes, returns unsubscribe() function, provides you with user object
-        this.authUnsubscribe = firebase.auth().onAuthStateChanged(async (user) => {
+        this.authUnsubscribe = firebase.auth().onAuthStateChanged(async user => {
           if (!user) {
-            try {
-              await firebase.auth().signInAnonymously();
-            } catch (error) {
-              console.log(error.message);
-            }
+            await firebase.auth().signInAnonymously();
           }
+
           // update user state with currently active user data
           this.setState({
             uid: user.uid,
             messages: [],
-            isConnected: true,
           });
+
           // Create a reference to active user's documents (messages). User can see all messages
-          this.referenceChatAppUser = firebase.firestore().collection('messages');
+          this.referenceChatAppUser = firebase.firestore().collection('messages').orderBy('createdAt', 'desc')
 
           // Listen for collection changes for current user
           this.unsubscribeChatAppUser = this.referenceChatAppUser.onSnapshot(this.onCollectionUpdate);
         });
-        // Set the state with a static system message to tell user has entered the chat
-        this.setState({
-          // Messages must follow a certain format to work with Gifted Chat library: ID, creation date, user object (user ID, name, avatar)
-          messages: [
-            {
-              _id: 2,
-              text: `${this.props.navigation.state.params.name} has entered the chat`,
-              createdAt: new Date(),
-              system: true,
-            },
-          ]
-        });
       } else {
-        console.log('offline');
         this.setState({
           isConnected: false,
         });
-        // Retrieve messages from asyncStorage
         this.getMessages();
       }
     });
   }
+
+
+
+
 
   componentWillUnmount() {
     // Stop listening to authentication
@@ -238,6 +243,7 @@ export default class Chat extends Component {
         <View style={[styles.container, { backgroundColor: this.props.navigation.state.params.bgColor }]}>
           <GiftedChat
             renderBubble={this.renderBubble}
+            renderInputToolbar={this.renderInputToolbar.bind(this)}
             messages={this.state.messages}
             onSend={messages => this.onSend(messages)}
             user={{
