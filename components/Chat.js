@@ -136,7 +136,6 @@ export default class Chat extends Component {
 
   // hide Input field when offline because messages can't be sent
   renderInputToolbar(props) {
-    console.log('Message from renderInputToolbar: ' + this.state.isConnected);
     if (this.state.isConnected == false) {
     } else {
       return (
