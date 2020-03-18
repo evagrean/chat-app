@@ -5,6 +5,7 @@ import NetInfo from '@react-native-community/netinfo';
 import { decode, encode } from 'base-64'
 // only for android
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import { YellowBox } from 'react-native';
 
 
 // require Firebase and Cloud Firestore
@@ -24,6 +25,10 @@ export default class Chat extends Component {
 
   constructor(props) {
     super(props);
+
+    YellowBox.ignoreWarnings(['Setting a timer']);
+
+
     // Creation of the state object in order to send, receive and display messages
     this.state = {
       messages: [],
