@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 // import { AntDesign } from '@expo/vector-icons';
@@ -11,6 +12,7 @@ export default class CustomActions extends Component {
   onActionPress = () => {
     const options = ['Choose From Library', 'Take Picture', 'Send Location', 'Cancel'];
     const cancelButtonIndex = options.length - 1;
+    // context class used to hand options to display to ActionSheet component
     this.context.actionSheet().showActionSheetWithOptions(
       {
         options,
@@ -33,7 +35,7 @@ export default class CustomActions extends Component {
     return (
 
       <TouchableOpacity
-        style={styles.container}
+        style={[styles.container]}
         onPress={this.onActionPress}>
         <View style={[styles.actionButton, this.props.actionButtonStyle]}>
           <Text style={[styles.iconText, this.props.iconTextStyle]}>+</Text>
@@ -64,4 +66,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
-}); 
+});
+
+CustomActions.contextTypes = {
+  actionSheet: PropTypes.func,
+};
