@@ -5,12 +5,11 @@ import NetInfo from '@react-native-community/netinfo';
 import { decode, encode } from 'base-64'
 // only for android
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import CustomActions from './CustomActions';
-
-
 // require Firebase and Cloud Firestore
 const firebase = require('firebase');
 require('firebase/firestore');
+import { MapView } from 'react-native-maps';
+import CustomActions from './CustomActions';
 
 if (!global.btoa) {
   global.btoa = encode;
