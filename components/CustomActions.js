@@ -9,12 +9,30 @@ import * as Location from 'expo-location';
 // <AntDesign name='pluscircleo' color='#b2b2b2' />
 
 export default class CustomActions extends Component {
-  // User presses action button > onActionPress called > creates ActionSheet
-  // ActionSheet displays set of defined actions
-  // User selects action > method for performing action is called
+
 
   pickImage = async () => {
-    // Code goes here
+    // use try{}catch{} block for AsyncStorage for proper error handling
+    try {
+      // Ask user for permission with permission type CAMERA_ROLL
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+
+      // If user grants access, function returns string 'granted'
+      if (status === 'granted') {
+        // call launchImageLibraryAsync from ImagePicker API to open up media library of device.
+        // If not cancelled, returns: cancelled: false, uri, width, height, type
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: 'Images',
+        }).catch(error => console.log(error));
+
+        if (!result.cancelled) {
+          const imageUrl = await this.uploadImage(result.uri);
+          this.props.onSend({ image: imageUrl })
+        }
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   takePhoto = async () => {
@@ -26,9 +44,12 @@ export default class CustomActions extends Component {
   }
 
   uploadImage = async () => {
-    // Code
+
   }
 
+  // User presses action button > onActionPress called > creates ActionSheet
+  // ActionSheet displays set of defined actions
+  // User selects action > method for performing action is called
   onActionPress = () => {
     const options = ['Choose From Library', 'Take Picture', 'Send Location', 'Cancel'];
     const cancelButtonIndex = options.length - 1;
