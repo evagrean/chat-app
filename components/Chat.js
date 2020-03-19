@@ -3,8 +3,6 @@ import { AsyncStorage, Keyboard, StyleSheet, TouchableWithoutFeedback, View, Yel
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import NetInfo from '@react-native-community/netinfo';
 import { decode, encode } from 'base-64'
-import * as Permissions from 'expo-permissions';
-import * as ImagePicker from 'expo-image-picker';
 // only for android
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import CustomActions from './CustomActions';
