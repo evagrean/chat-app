@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, SnapshotViewIOS } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
@@ -70,8 +70,36 @@ export default class CustomActions extends Component {
       }
     }
   }
+  // Storing the images in Google Firebase Storage
+  uploadImage = async (uri) => {
+    try {
+      const blob = await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          resolve(xhr.response);
+        };
+        xhr.onerror = ((e) => {
+          console.log(e);
+          reject(new TypeError('Network Request Failed'));
+        });
+        xhr.responseType = 'blob';
+        xhr.open('GET', uri, true);
+        xhr.send(null);
+      });
+      // Make unique name for each image uploaded
+      const getImageNameFromUri = uri.split('/');
+      let imageName = getImageNameFromUri[getImageNameFromUri.length - 1];
+      const ref = firebase.storage().ref().child(`${imageName}`);
+      const shapshot = await ref.put(blob);
 
-  uploadImage = async () => {
+      blob.close();
+
+      const imageUrl = await snapshot.ref.getDownloadURL();
+      return imageUrl;
+
+    } catch (error) {
+      console.log(error.message);
+    }
 
   }
 
