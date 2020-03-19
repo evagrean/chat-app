@@ -6,6 +6,7 @@ import { decode, encode } from 'base-64'
 // only for android
 import KeyboardSpacer from 'react-native-keyboard-spacer';
 import { YellowBox } from 'react-native';
+import CustomActions from './CustomActions';
 
 
 // require Firebase and Cloud Firestore
@@ -169,6 +170,10 @@ export default class Chat extends Component {
     )
   }
 
+  renderCustomActions = (props) => {
+    return <CustomActions {...props} />;
+  }
+
   // Called as soon as Chat component mounts
   componentDidMount() {
     // Check connection status once
@@ -246,6 +251,7 @@ export default class Chat extends Component {
       <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
         <View style={[styles.container, { backgroundColor: this.props.navigation.state.params.bgColor }]}>
           <GiftedChat
+            renderActions={this.renderCustomActions}
             renderBubble={this.renderBubble}
             renderInputToolbar={this.renderInputToolbar.bind(this)}
             messages={this.state.messages}
