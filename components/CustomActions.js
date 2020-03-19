@@ -9,6 +9,23 @@ export default class CustomActions extends Component {
   // User presses action button > onActionPress called > creates ActionSheet
   // ActionSheet displays set of defined actions
   // User selects action > method for performing action is called
+
+  pickImage = async () => {
+    // Code goes here
+  }
+
+  takePhoto = async () => {
+    // Code
+  }
+
+  getLocation = async () => {
+    // Code
+  }
+
+  uploadImage = async () => {
+    // Code
+  }
+
   onActionPress = () => {
     const options = ['Choose From Library', 'Take Picture', 'Send Location', 'Cancel'];
     const cancelButtonIndex = options.length - 1;
@@ -21,10 +38,11 @@ export default class CustomActions extends Component {
       async (buttonIndex) => {
         switch (buttonIndex) {
           case 0: console.log('user wants to pick an image');
-            return;
+            return this.pickImage();
           case 1: console.log('user wants to take a photo');
-            return;
+            return this.takePhoto();
           case 2: console.log('user wants to get their location');
+            return this.getLocation();
           default:
         }
       },

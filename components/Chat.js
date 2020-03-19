@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { AsyncStorage, Keyboard, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { AsyncStorage, Keyboard, StyleSheet, TouchableWithoutFeedback, View, YellowBox } from 'react-native';
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import NetInfo from '@react-native-community/netinfo';
 import { decode, encode } from 'base-64'
+import * as Permissions from 'expo-permissions';
+import * as ImagePicker from 'expo-image-picker';
 // only for android
 import KeyboardSpacer from 'react-native-keyboard-spacer';
-import { YellowBox } from 'react-native';
 import CustomActions from './CustomActions';
 
 
@@ -173,9 +174,33 @@ export default class Chat extends Component {
       />
     )
   }
-
+  // Render button that opens ActionSheet
   renderCustomActions = (props) => {
     return <CustomActions {...props} />;
+  }
+
+  // Check if currentMessage contains location data
+  renderCustomView(props) {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{
+            borderRadius: 13,
+            height: 100,
+            margin: 3,
+            width: 150
+          }}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      );
+    }
+    return null;
   }
 
   // Called as soon as Chat component mounts
@@ -255,6 +280,7 @@ export default class Chat extends Component {
       <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
         <View style={[styles.container, { backgroundColor: this.props.navigation.state.params.bgColor }]}>
           <GiftedChat
+            renderCustomView={this.renderCustomView}
             renderActions={this.renderCustomActions}
             renderBubble={this.renderBubble}
             renderInputToolbar={this.renderInputToolbar.bind(this)}
