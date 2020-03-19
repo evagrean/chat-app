@@ -36,7 +36,20 @@ export default class CustomActions extends Component {
   }
 
   takePhoto = async () => {
-    // Code
+    try {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
+      if (status === 'granted') {
+        let result = await ImagePicker.launchCameraAsync({
+          mediaTypes: 'Images',
+        }).catch(error => console.log(error));
+        if (!result.cancelled) {
+          const imageUrl = await this.uploadImage(result.uri);
+          this.props.onSend({ image: imageUrl })
+        }
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   getLocation = async () => {
