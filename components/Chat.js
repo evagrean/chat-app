@@ -5,11 +5,11 @@ import NetInfo from '@react-native-community/netinfo';
 import { decode, encode } from 'base-64'
 // only for android
 import KeyboardSpacer from 'react-native-keyboard-spacer';
+import MapView from 'react-native-maps';
+import CustomActions from './CustomActions';
 // require Firebase and Cloud Firestore
 const firebase = require('firebase');
 require('firebase/firestore');
-import { MapView } from 'react-native-maps';
-import CustomActions from './CustomActions';
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -75,7 +75,7 @@ export default class Chat extends Component {
         createdAt: data.createdAt.toDate(),
         user: data.user,
         image: data.image || '',
-        location: data.location || '',
+        location: data.location || null,
       });
     });
     this.setState({
@@ -89,7 +89,7 @@ export default class Chat extends Component {
     const message = this.state.messages[0];
     this.referenceMessages.add({
       _id: message._id,
-      text: message.text,
+      text: message.text || '',
       createdAt: message.createdAt,
       user: message.user,
       uid: this.state.uid,
@@ -171,23 +171,15 @@ export default class Chat extends Component {
       />
     )
   }
-  // Render button that opens ActionSheet
-  renderCustomActions = (props) => {
-    return <CustomActions {...props} />;
-  }
 
-  // Check if currentMessage contains location data
+
+  // Check if current message contains location data, if yes, return a MapView
   renderCustomView(props) {
     const { currentMessage } = props;
     if (currentMessage.location) {
       return (
         <MapView
-          style={{
-            borderRadius: 13,
-            height: 100,
-            margin: 3,
-            width: 150
-          }}
+          style={{ borderRadius: 13, height: 100, margin: 3, width: 150, }}
           region={{
             latitude: currentMessage.location.latitude,
             longitude: currentMessage.location.longitude,
@@ -198,6 +190,12 @@ export default class Chat extends Component {
       );
     }
     return null;
+  }
+
+  // This function is responsible for creating the circle button. 
+  //Newly created component for custom actions works with props that this function recieves
+  renderCustomActions = (props) => {
+    return <CustomActions {...props} />;
   }
 
   // Called as soon as Chat component mounts
@@ -256,10 +254,6 @@ export default class Chat extends Component {
     });
   }
 
-
-
-
-
   componentWillUnmount() {
     // Stop listening to authentication
     this.authUnsubscribe();
@@ -277,10 +271,10 @@ export default class Chat extends Component {
       <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
         <View style={[styles.container, { backgroundColor: this.props.navigation.state.params.bgColor }]}>
           <GiftedChat
-            renderCustomView={this.renderCustomView}
-            renderActions={this.renderCustomActions}
             renderBubble={this.renderBubble}
             renderInputToolbar={this.renderInputToolbar.bind(this)}
+            renderActions={this.renderCustomActions}
+            renderCustomView={this.renderCustomView} // prop used to render the map in a custom view
             messages={this.state.messages}
             onSend={messages => this.onSend(messages)}
             user={{
