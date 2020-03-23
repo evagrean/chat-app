@@ -19,11 +19,11 @@ export default class CustomActions extends Component {
       { options, cancelButtonIndex },
       async (buttonIndex) => {
         switch (buttonIndex) {
-          case 0: console.log('user wants to pick an image');
+          case 0:
             return this.pickImage();
-          case 1: console.log('user wants to take a picture');
+          case 1:
             return this.takePhoto();
-          case 2: console.log('user wants to get their location');
+          case 2:
             return this.getLocation();
           default:
         }
