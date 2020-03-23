@@ -71,11 +71,10 @@ export default class CustomActions extends Component {
       const latitude = JSON.stringify(result.coords.latitude);
 
       if (result) {
-        console.log(longitude);
         this.props.onSend({
           location: {
-            longitude: result.coords.longitude,
-            latitude: result.coords.latitude,
+            longitude,
+            latitude,
           }
         })
       }
