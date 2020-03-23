@@ -181,8 +181,8 @@ export default class Chat extends Component {
         <MapView
           style={{ borderRadius: 13, height: 100, margin: 3, width: 150, }}
           region={{
-            latitude: currentMessage.location.latitude,
-            longitude: currentMessage.location.longitude,
+            latitude: Number(currentMessage.location.latitude),
+            longitude: Number(currentMessage.location.longitude),
             latitudeDelta: 0.0922,
             longitudeDelta: 0.0421,
           }}

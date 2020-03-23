@@ -69,11 +69,13 @@ export default class CustomActions extends Component {
       let result = await Location.getCurrentPositionAsync({});
       const longitude = JSON.stringify(result.coords.longitude);
       const latitude = JSON.stringify(result.coords.latitude);
+
       if (result) {
+        console.log(longitude);
         this.props.onSend({
           location: {
-            longitude,
-            latitude
+            longitude: result.coords.longitude,
+            latitude: result.coords.latitude,
           }
         })
       }
