@@ -31,92 +31,110 @@ export default class CustomActions extends Component {
     );
   };
 
+
   pickImage = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
+    try {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
-    if (status === 'granted') {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: 'Images',
-      }).catch(error => console.log(error));
+      if (status === 'granted') {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        }).catch(error => console.log(error));
 
-      if (!result.cancelled) {
-        const imageUrl = await this.uploadImage(result.uri);
-        this.props.onSend({ image: imageUrl });
+        if (!result.cancelled) {
+          const imageUrl = await this.uploadImage(result.uri);
+          this.props.onSend({ image: imageUrl });
+        }
       }
+    } catch (error) {
+      console.log(error.message);
     }
+
   }
 
   takePhoto = async () => {
-    const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
+    try {
+      const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL, Permissions.CAMERA);
 
-    if (status === 'granted') {
-      let result = await ImagePicker.launchCameraAsync({
-        mediaTypes: 'Images'
-      }).catch(error => console.log(error));
+      if (status === 'granted') {
+        let result = await ImagePicker.launchCameraAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        }).catch(error => console.log(error));
 
-      if (!result.cancelled) {
-        const imageUrl = await this.uploadImage(result.uri);
-        this.props.onSend({ image: imageUrl });
+        if (!result.cancelled) {
+          const imageUrl = await this.uploadImage(result.uri);
+          this.props.onSend({ image: imageUrl });
+        }
       }
+    } catch (error) {
+      console.log(error.message);
     }
   }
 
   getLocation = async () => {
-    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+    try {
+      const { status } = await Permissions.askAsync(Permissions.LOCATION);
 
-    if (status === 'granted') {
-      let result = await Location.getCurrentPositionAsync({});
-      const longitude = JSON.stringify(result.coords.longitude);
-      const latitude = JSON.stringify(result.coords.latitude);
+      if (status === 'granted') {
+        let result = await Location.getCurrentPositionAsync({});
+        const longitude = JSON.stringify(result.coords.longitude);
+        const latitude = JSON.stringify(result.coords.latitude);
 
-      if (result) {
-        this.props.onSend({
-          location: {
-            longitude,
-            latitude,
-          }
-        })
+        if (result) {
+          this.props.onSend({
+            location: {
+              longitude,
+              latitude,
+            }
+          })
+        }
       }
+    } catch (error) {
+      console.log(error.message);
     }
   }
 
   // Upload image to Firebase in order to store it in database to make it visible in chat
   uploadImage = async (uri) => {
+    try {
+      // Before upload, need to convert file into a blob
+      const blob = await new Promise((resolve, reject) => {
+        // Create new XMLHttpRequest
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          resolve(xhr.response);
+        };
+        xhr.onerror = function (e) {
+          console.log(e);
+          reject(new TypeError('Network request failed'));
+        };
+        // Set responseType to 'blob
+        xhr.responseType = 'blob';
+        // Open connection and retrieve URI's data (=image)
+        xhr.open('GET', uri, true);
+        xhr.send(null);
+      });
+      // Create unique file names for each image depending on uri
+      let uriSections = uri.split('/');
+      let imageName = uriSections[uriSections.length - 1];
 
-    // Before upload, need to convert file into a blob
-    const blob = await new Promise((resolve, reject) => {
-      // Create new XMLHttpRequest
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        resolve(xhr.response);
-      };
-      xhr.onerror = function (e) {
-        console.log(e);
-        reject(new TypeError('Network request failed'));
-      };
-      // Set responseType to 'blob
-      xhr.responseType = 'blob';
-      // Open connection and retrieve URI's data (=image)
-      xhr.open('GET', uri, true);
-      xhr.send(null);
-    });
-    // Create unique file names for each image depending on uri
-    let uriSections = uri.split('/');
-    let imageName = uriSections[uriSections.length - 1];
+      // Create reference to the storage and use put to store content retrieved form request
+      const ref = firebase.storage().ref().child(`${imageName}`);
+      const snapshot = await ref.put(blob);
 
-    // Create reference to the storage and use put to store content retrieved form request
-    const ref = firebase.storage().ref().child(`${imageName}`);
-    const snapshot = await ref.put(blob);
+      // Close connection
+      blob.close();
 
-    // Close connection
-    blob.close();
-
-    // Retrieve image's URL from the server
-    return await snapshot.ref.getDownloadURL();
+      // Retrieve image's URL from the server
+      return await snapshot.ref.getDownloadURL();
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   render() {
     return (
+
       <TouchableOpacity
         style={[styles.container]}
         // When user presses button, onActionPress is called, which creates an ActionSheet that displays set of actions
