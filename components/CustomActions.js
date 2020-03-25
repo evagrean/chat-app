@@ -31,7 +31,6 @@ export default class CustomActions extends Component {
     );
   };
 
-
   pickImage = async () => {
     const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
 
@@ -118,7 +117,6 @@ export default class CustomActions extends Component {
 
   render() {
     return (
-
       <TouchableOpacity
         style={[styles.container]}
         // When user presses button, onActionPress is called, which creates an ActionSheet that displays set of actions

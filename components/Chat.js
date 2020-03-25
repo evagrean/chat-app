@@ -85,7 +85,7 @@ export default class Chat extends Component {
 
 
   // Add new messages to the database
-  addMessage() {
+  addMessage = () => {
     const message = this.state.messages[0];
     this.referenceMessages.add({
       _id: message._id,
@@ -99,7 +99,7 @@ export default class Chat extends Component {
   }
 
   // Custom function called when user sends a message
-  onSend(messages = []) {
+  onSend = (messages = []) => {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }), () => {
@@ -109,7 +109,7 @@ export default class Chat extends Component {
   }
 
   // Async functions 
-  async getMessages() {
+  getMessages = async () => {
     let messages = '';
     // wrap logic in try and catch so that errors can be caught
     try {
@@ -126,7 +126,7 @@ export default class Chat extends Component {
     }
   };
 
-  async saveMessages() {
+  saveMessages = async () => {
     try {
       await AsyncStorage.setItem('messages', JSON.stringify(this.state.messages));
     } catch (error) {
@@ -134,7 +134,7 @@ export default class Chat extends Component {
     }
   }
 
-  async deleteMessages() {
+  deleteMessages = async () => {
     try {
       await AsyncStorage.removeItem('messages');
     } catch (error) {
@@ -143,7 +143,7 @@ export default class Chat extends Component {
   }
 
   // hide Input field when offline because messages can't be sent
-  renderInputToolbar(props) {
+  renderInputToolbar = (props) => {
     if (this.state.isConnected == false) {
     } else {
       return (
@@ -154,7 +154,7 @@ export default class Chat extends Component {
   };
 
   // Change background color of sender's speech bubble
-  renderBubble(props) {
+  renderBubble = (props) => {
     return (
       <Bubble
         {...props}
@@ -171,7 +171,6 @@ export default class Chat extends Component {
       />
     )
   }
-
 
   // Check if current message contains location data, if yes, return a MapView
   renderCustomView(props) {
