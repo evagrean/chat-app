@@ -1,4 +1,32 @@
-import React, { Component } from 'react';
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Chat.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: Chat.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { Component } from 'react';
 import { AsyncStorage, Keyboard, StyleSheet, TouchableWithoutFeedback, View, YellowBox } from 'react-native';
 import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import NetInfo from '@react-native-community/netinfo';
@@ -135,7 +163,7 @@ export default class Chat extends Component {
    * Loads all messages from AsyncStorage
    * @async 
    * @function getMessages 
-   * @returns {Promise<string>} The data from the storage
+   * @returns {Promise&lt;string>} The data from the storage
    */
   getMessages = async () => {
     let messages = '';
@@ -158,7 +186,7 @@ export default class Chat extends Component {
    * Saves messages to AsyncStorage
    * @async 
    * @function saveMessages 
-   * @returns {Promise<string>} message in AsyncStorage
+   * @returns {Promise&lt;string>} message in AsyncStorage
    */
   saveMessages = async () => {
     try {
@@ -171,7 +199,7 @@ export default class Chat extends Component {
    * Can delete messages from AsyncStorage. Currently not used in app.
    * @async 
    * @function deleteMessages 
-   * @returns {Promise<string>} Data that will be deleted from AsyncStorage
+   * @returns {Promise&lt;string>} Data that will be deleted from AsyncStorage
    */
   deleteMessages = async () => {
     try {
@@ -190,7 +218,7 @@ export default class Chat extends Component {
     if (this.state.isConnected == false) {
     } else {
       return (
-        <InputToolbar
+        &lt;InputToolbar
           {...props} />
       );
     }
@@ -203,7 +231,7 @@ export default class Chat extends Component {
    */
   renderBubble = (props) => {
     return (
-      <Bubble
+      &lt;Bubble
         {...props}
         wrapperStyle={{
           right: {
@@ -228,7 +256,7 @@ export default class Chat extends Component {
     const { currentMessage } = props;
     if (currentMessage.location) {
       return (
-        <MapView
+        &lt;MapView
           style={{ borderRadius: 13, height: 100, margin: 3, width: 150, }}
           showsUserLocation={true}
           region={{
@@ -249,7 +277,7 @@ export default class Chat extends Component {
    * @returns {CustomActions}
    */
   renderCustomActions = (props) => {
-    return <CustomActions {...props} />;
+    return &lt;CustomActions {...props} />;
   }
 
   // Called as soon as Chat component mounts
@@ -327,9 +355,9 @@ export default class Chat extends Component {
   /// ----- !!!
   render() {
     return (
-      <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
-        <View style={[styles.container, { backgroundColor: this.props.navigation.state.params.bgColor }]}>
-          <GiftedChat
+      &lt;TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
+        &lt;View style={[styles.container, { backgroundColor: this.props.navigation.state.params.bgColor }]}>
+          &lt;GiftedChat
             renderBubble={this.renderBubble}
             renderInputToolbar={this.renderInputToolbar.bind(this)}
             renderActions={this.renderCustomActions}
@@ -344,9 +372,9 @@ export default class Chat extends Component {
             renderUsernameOnMessage={true}
           />
           {/* Make sure that keyboard and message input field display correctly in Android OS */}
-          {Platform.OS === 'android' ? <KeyboardSpacer /> : null}
-        </View>
-      </TouchableWithoutFeedback>
+          {Platform.OS === 'android' ? &lt;KeyboardSpacer /> : null}
+        &lt;/View>
+      &lt;/TouchableWithoutFeedback>
     )
   }
 }
@@ -358,4 +386,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
   }
-}); 
+}); </code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Chat.html">Chat</a></li><li><a href="CustomActions.html">CustomActions</a></li><li><a href="Start.html">Start</a></li></ul><h3>Global</h3><ul><li><a href="global.html#addMessage">addMessage</a></li><li><a href="global.html#deleteMessages">deleteMessages</a></li><li><a href="global.html#getLocation">getLocation</a></li><li><a href="global.html#getMessages">getMessages</a></li><li><a href="global.html#onActionPress">onActionPress</a></li><li><a href="global.html#onCollectionUpdate">onCollectionUpdate</a></li><li><a href="global.html#onSend">onSend</a></li><li><a href="global.html#pickImage">pickImage</a></li><li><a href="global.html#renderBubble">renderBubble</a></li><li><a href="global.html#renderCustomActions">renderCustomActions</a></li><li><a href="global.html#renderCustomView">renderCustomView</a></li><li><a href="global.html#renderInputToolbar">renderInputToolbar</a></li><li><a href="global.html#saveMessages">saveMessages</a></li><li><a href="global.html#takePhoto">takePhoto</a></li><li><a href="global.html#uploadImage">uploadImage</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Mon Mar 30 2020 11:19:40 GMT+0200 (GMT+02:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
