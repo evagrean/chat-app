@@ -1,12 +1,11 @@
 # Native Mobile Chat App
 
-This is a chat app for mobile devices built with React-Native. It provides users with a chat interface where they can send/receive text messages and images as well as share their location.
-
-It was the final project for my full-stack web development bootcamp.
+This is a chat app for mobile devices built with React-Native. It provides users with a chat interface where they can send/receive text messages and images as well as share their location. It was the final project for my full-stack web development bootcamp.
 
 # Demo
 
-![](assets/bg-img.png)
+<img src="assets/start-screen.png" width="200">
+<img src="assets/chat-screen.png" width="200">
 
 # Prerequisites
 
