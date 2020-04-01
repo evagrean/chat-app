@@ -84,3 +84,7 @@ require ('firebase/firestore');
 ```javascript
 this.referenceMessages = firebase.firestore().collection('chat');`
 ```
+
+# Links
+
+[Kanban board](https://trello.com/b/ZFwOsZLi/chat-app)
