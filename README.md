@@ -46,5 +46,41 @@ This is a chat app for mobile devices built with React-Native. It provides users
 
 # Database information
 
-This project uses [Firebase](https://firebase.google.com/) for data storage. Check the [Firebase documentation](https://firebase.google.com/docs/web/setup) for how to register your own database credentials in your project.
+This project uses [Google Firebase/Firestore](https://firebase.google.com/) for data storage.<br>
+If you get stuck at any point,check the [Firebase documentation](https://firebase.google.com/docs/web/setup)
 
+## Set up Firestore for your React Native project
+
+1. Sign in, then click on "Go to console" link
+
+2. Choose to start in test mode, so we don't need to create any security rules
+
+3. Install Firestore via Firebase in your project: `npm install firebase`
+
+4. Import Firestore in your App.js file
+```javascript
+const firebase = require('firebase');
+require ('firebase/firestore');
+```
+5. Back in the Firestore project in your browser, open up "Settings", then "General" tab. Under the section "Your apps" you can generate configurations for different platforms. Here, click "Firestore for Web". Copy the contents of the `config` object.
+
+6. In your Chat.js file create a constructor in the App class. Here you can paste the data you copied from `config` object.  
+
+> Example
+> ```javascript
+>firebase.initializeApp({
+>        apiKey: "AIzaSyDmXKwGCCOpKFmOQFirJuya5Vli4Z-RK0w",
+>        authDomain: "chat-app-66e5f.firebaseapp.com",
+>        databaseURL: "https://chat-app-66e5f.firebaseio.com",
+>        projectId: "chat-app-66e5f",
+>        storageBucket: "chat-app-66e5f.appspot.com",
+>        messagingSenderId: "1033550813300",
+>        appId: "1:1033550813300:web:5080f50f0684c29e1cd921"
+>      });
+> ```
+**Note: You'd need to copy the configuration info from your own Firstore database!**
+
+7. Create a reference to the Firestore collection: 
+```javascript
+this.referenceMessages = firebase.firestore().collection('chat');`
+```
