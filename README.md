@@ -69,14 +69,14 @@ require ('firebase/firestore');
 > Example
 > ```javascript
 >firebase.initializeApp({
->        apiKey: "AIzaSyDmXKwGCCOpKFmOQFirJuya5Vli4Z-RK0w",
->        authDomain: "chat-app-66e5f.firebaseapp.com",
->        databaseURL: "https://chat-app-66e5f.firebaseio.com",
->        projectId: "chat-app-66e5f",
->        storageBucket: "chat-app-66e5f.appspot.com",
->        messagingSenderId: "1033550813300",
->        appId: "1:1033550813300:web:5080f50f0684c29e1cd921"
->      });
+apiKey: "your-api-key",
+authDomain: "your-authdomain",
+databaseURL: "your-database-url",
+projectId: "your-project-id",
+storageBucket: "your-storage-bucket",
+messagingSenderId: "your-messaging-sender-id",
+appId: "your-app-id"
+});
 > ```
 **Note: You'd need to copy the configuration info from your own Firstore database!**
 
