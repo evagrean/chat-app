@@ -6,6 +6,8 @@ This is a chat app for mobile devices built with React-Native. It provides users
 
 <img src="assets/start-screen.png" width="200">  <img src="assets/chat-screen.png" width="200">
 
+[Watch video](https://evagrean.github.io/chat-app-demo/)
+
 # Prerequisites
 
 - Install [Expo](https://expo.io/): `npm install expo-cli -g`
