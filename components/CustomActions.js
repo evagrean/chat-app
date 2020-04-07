@@ -165,6 +165,8 @@ export default class CustomActions extends Component {
 
       <TouchableOpacity
         style={[styles.container]}
+        accessibilityLabel="Tap me"
+        accessibilityHint="You can choose if you want to pick an image, take a photo or send your location"
         // When user presses button, onActionPress is called, which creates an ActionSheet that displays set of actions
         onPress={this.onActionPress}>
         <View style={[styles.actionButton, this.props.actionButtonStyle]}>

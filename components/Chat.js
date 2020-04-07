@@ -322,9 +322,6 @@ export default class Chat extends Component {
   }
 
   // Code for rendering chat interface with GiftedChat component
-  // ----- !!!
-  // Don't forget to add accesibilityLabel and accessibilityHint for screenreacers to action button in input field 
-  /// ----- !!!
   render() {
     return (
       <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); }}>
